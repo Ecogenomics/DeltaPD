@@ -1,0 +1,178 @@
+{% extends "template.html" %}
+
+{% block body %}
+
+    <h2>DeltaPD Report</h2>
+
+    <h3>Parameters</h3>
+
+    <!-- Input files -->
+    <div class="accordion">
+        <button class="accordion-button">Input Files</button>
+        <div class="panel">
+            <table>
+                <thead>
+                <tr>
+                    <th>Input</th>
+                    <th>Path</th>
+                    <th>SHA256</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>Reference tree</td>
+                    <td>{{ path_r_tree }}</td>
+                    <td>{{ path_r_tree_sha256 }}</td>
+                </tr>
+                <tr>
+                    <td>Query tree</td>
+                    <td>{{ path_q_tree }}</td>
+                    <td>{{ path_q_tree_sha256 }}</td>
+                </tr>
+                <tr>
+                    <td>Metadata</td>
+                    <td>{{ path_metadata }}</td>
+                    <td>{{ path_metadata_sha256 }}</td>
+                </tr>
+                <tr>
+                    <td>Query MSA</td>
+                    <td>{{ path_msa_file }}</td>
+                    <td>{{ path_msa_file_sha256 }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Parameters -->
+    <div class="accordion">
+        <button class="accordion-button">Parameters</button>
+        <div class="panel">
+            <table>
+                <thead>
+                <tr>
+                    <th>Parameter</th>
+                    <th>Value</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>Relative influence threshold</td>
+                    <td>{{ inf_thresh }}</td>
+                </tr>
+                <tr>
+                    <td>Metric difference threshold</td>
+                    <td>{{ dif_thresh }}</td>
+                </tr>
+                <tr>
+                    <td>Output directory</td>
+                    <td>{{ out_dir }}</td>
+                </tr>
+                <tr>
+                    <td><i>k</i></td>
+                    <td>{{ k }}</td>
+                </tr>
+                <tr>
+                    <td>Generate plots?</td>
+                    <td>{{ plot }}</td>
+                </tr>
+                <tr>
+                    <td>
+                        ETE 3 scale (pixels per unit)
+                    </td>
+                    <td>{{ ete3_scale }}</td>
+                </tr>
+                <tr>
+                    <td>
+                        Max query taxa per rep taxon
+                    </td>
+                    <td>{{ max_taxa }}</td>
+                </tr>
+                <tr>
+                    <td>qry_sep</td>
+                    <td>{{ qry_sep }}</td>
+                </tr>
+                <tr>
+                    <td>cpus</td>
+                    <td>{{ cpus }}</td>
+                </tr>
+                <tr>
+                    <td>Execution start time</td>
+                    <td>{{ exec_time_start }}</td>
+                </tr>
+                <tr>
+                    <td>Execution end time</td>
+                    <td>{{ exec_time_end }}</td>
+                </tr>
+                <tr>
+                    <td>Execution duration</td>
+                    <td>{{ exec_time_duration }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <h3>Outlier taxa</h3>
+
+    {% for q_label, outlier_list in outliers.items() %}
+        <div class="accordion">
+            <button class="accordion-button">{{ q_label }}</button>
+            <div class="panel">
+                <table class="centeredTable">
+                    <thead>
+                    <tr>
+                        <th rowspan="2">Reference Taxon</th>
+                        <th rowspan="2">Iteration</th>
+                        <th colspan="2">R2</th>
+                        <th colspan="2">MSE</th>
+                        <th colspan="2">Gradient</th>
+                        <th rowspan="2">Influence</th>
+                        <th rowspan="2">Delta from base</th>
+                        <th rowspan="2">Plots</th>
+                    </tr>
+                    <tr>
+                        <td>Base</td>
+                        <td>JK</td>
+                        <td>Base</td>
+                        <td>JK</td>
+                        <td>Base</td>
+                        <td>JK</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for outlier_item in outlier_list %}
+                        <tr>
+                            <td>{{ outlier_item['ref_label'] }}</td>
+                            <td>{{ outlier_item['i'] }}</td>
+                            <td>{{ outlier_item['base_r2'] }}</td>
+                            <td>{{ outlier_item['r2'] }}</td>
+                            <td>{{ outlier_item['base_mse'] }}</td>
+                            <td>{{ outlier_item['mse'] }}</td>
+                            <td>{{ outlier_item['base_grad'] }}</td>
+                            <td>{{ outlier_item['grad'] }}</td>
+                            <td>{{ outlier_item['inf'] }}</td>
+                            <td>{{ outlier_item['delta'] }}</td>
+                            <td>
+                                {% if plot %}
+                                    <a href="deltapd_data/{{ outlier_item['i'] }}/{{ q_label }}/{{ outlier_item['ref_label'] }}_qry.png"
+                                       target="_blank">QTree</a> / <a
+                                        href="deltapd_data/{{ outlier_item['i'] }}/{{ q_label }}/{{ outlier_item['ref_label'] }}_rep.png"
+                                        target="_blank">RTree</a> / <a
+                                        href="deltapd_data/{{ outlier_item['i'] }}/{{ q_label }}/{{ outlier_item['ref_label'] }}.png"
+                                        target="_blank">PD</a>
+                                {% else %}
+                                    <div class="tooltip">N/A
+                                        <span class="tooltiptext">Re-run using --plot.</span>
+                                    </div>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {% endfor %}
+
+{% endblock %}

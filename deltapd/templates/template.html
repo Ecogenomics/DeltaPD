@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>DeltaPD - Report</title>
+    <link rel="icon" type="image/svg+xml" href="report_data/static/img/deltapd.svg">
+
+    <!-- Global CSS -->
+    <style>
+        {% include 'assets/css/tooltip.css' %}
+        {% include 'assets/css/main.css' %}
+    </style>
+
+</head>
+<body>
+
+<nav>
+    <img src="report_data/static/img/deltapd.svg"/>
+    <span class="navTitle">v{{ deltapd_version }}</span>
+</nav>
+
+<div id="main_container">
+
+    {% block body %}
+
+    {% endblock %}
+</div>
+
+
+<!-- Global JavaScript -->
+<script>
+    {% include 'assets/js/main.js' %}
+</script>
+
+</body>
+</html>

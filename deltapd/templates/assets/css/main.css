@@ -1,0 +1,175 @@
+@font-face {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: local('Roboto'), local('Roboto-Regular'), url('report_data/static/font/Roboto/Roboto-Regular.ttf') format('truetype');
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    font-size: 1rem;
+    margin: 0;
+    background-color: #fcfcfc;
+}
+
+
+#main_container {
+    margin-top: 2rem;
+    padding: 2rem;
+}
+
+
+/* ---------------------------------- TABLE --------------------------------- */
+
+/* Table styles */
+table {
+    width: 100%;
+    font-size: 0.8rem;
+}
+
+.centeredTable tbody tr td {
+    text-align: center;
+}
+
+table thead th, table thead tr td {
+    text-align: center;
+    vertical-align: middle;
+}
+
+
+/* border */
+table {
+    border: 1px solid #ddd;
+    border-collapse: separate;
+    border-left: 0;
+    border-radius: 4px;
+    border-spacing: 0;
+}
+
+thead {
+    display: table-header-group;
+    vertical-align: middle;
+    border-color: inherit;
+    border-collapse: separate;
+}
+
+tr {
+    display: table-row;
+    vertical-align: inherit;
+    border-color: inherit;
+}
+
+th, td {
+    padding: 5px 4px 6px 4px;
+    text-align: left;
+    vertical-align: top;
+    border-left: 1px solid #ddd;
+}
+
+td {
+    border-top: 1px solid #ddd;
+}
+
+thead:first-child tr:first-child th:first-child, tbody:first-child tr:first-child td:first-child {
+    border-radius: 4px 0 0 0;
+}
+
+thead:last-child tr:last-child th:first-child, tbody:last-child tr:last-child td:first-child {
+    border-radius: 0 0 0 4px;
+}
+
+
+/* hover, row colour */
+
+table tr {
+    transition: background 0.1s ease-in;
+}
+
+table tr:nth-child(odd) {
+    background: #f5f5f5;
+}
+
+table tr:nth-child(even) {
+    background: #ffffff;
+}
+
+table tr:hover {
+    background: #efefef;
+}
+
+
+/* -------------------------------- ACCORDION ------------------------------- */
+
+/* Style the buttons that are used to open and close the accordion panel */
+.accordion-button {
+    background-color: #efefef;
+    color: #343131;
+    cursor: pointer;
+    padding: 0.3rem;
+    width: 100%;
+    text-align: left;
+    outline: none;
+    transition: 0.4s;
+    border: none;
+}
+
+.accordion {
+    border: 2px solid #efefef;
+    margin-top: 0.5rem
+}
+
+/* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
+.accordion-button:hover {
+    background-color: #e3e3e3;
+}
+
+/* Style the accordion panel. Note: hidden by default */
+.panel {
+    padding: 1rem;
+    background-color: white;
+    display: none;
+    overflow: hidden;
+
+
+}
+
+
+/* --------------------------------- NAVBAR --------------------------------- */
+nav {
+    display: flex;
+    position: fixed;
+    justify-content: space-between;
+    background-color: #83A5B8;
+    height: 1.5rem;
+    padding: 0.5rem;
+    width: 100%;
+    top: 0;
+}
+
+.navTitle {
+    display: flex;
+    padding-top: 5px;
+    margin-right: auto;
+    color: #FFFFFF;
+    font-size: 0.8rem;
+}
+
+
+/* -------------------------------- UTILITIES-------------------------------- */
+
+.container {
+    display: flex;
+}
+
+.d-flex {
+    display: flex;
+}
+
+.row {
+    flex-direction: row;
+}
+
+.mt-1 {
+    margin-top: 1rem;
+}

@@ -61,7 +61,6 @@ elif platform.system() == "Darwin":
 else:
     compile_extra_args.extend(['-fopenmp'])
     link_extra_args.extend(['-fopenmp'])
-    pass
 
 # Select Cython modules to compile.
 ext_modules = [Extension('deltapd.model', ['deltapd/model.pyx'],

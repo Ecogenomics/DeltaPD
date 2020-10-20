@@ -1,16 +1,11 @@
 # DeltaPD
 
+[![PyPI](https://img.shields.io/pypi/v/deltapd.svg)](https://pypi.python.org/pypi/deltapd)
 [![DOI](https://zenodo.org/badge/303236865.svg)](https://zenodo.org/badge/latestdoi/303236865)
 
-
-This project is currently in development and will be released in the future.
-
-
-References:
+DeltaPD is a tool used to determine outliers in a gene tree when compared against a reference tree.
 
 
-* Bradley Efron, Jackknife-After-Bootstrap Standard Errors and Influence Functions, Journal of the Royal Statistical Society. Series B (Methodological) Vol. 54, No. 1 (1992), pp. 83-127 (45 pages)
+This project is currently in development and is not recommended for public use.
 
-ETE 3: Reconstruction, analysis and visualization of phylogenomic data.
-Jaime Huerta-Cepas, Francois Serra and Peer Bork.
-Mol Biol Evol 2016; doi: 10.1093/molbev/msw046
+For more information, read the documentation here: https://ecogenomics.github.io/DeltaPD/

@@ -5,7 +5,17 @@
 
 DeltaPD is a tool used to determine outliers in a gene tree when compared against a reference tree.
 
+_Note: This project is currently in development and is not recommended for public use._
 
-This project is currently in development and is not recommended for public use.
+## Installation
 
+To install DeltaPD, simply run:
+
+```bash
+python -m pip install deltapd
+```
+
+Following installation, it will then be on the path. The help menu can be accessed via: `deltapd -h`
+
+## Documentation
 For more information, read the documentation here: https://ecogenomics.github.io/DeltaPD/

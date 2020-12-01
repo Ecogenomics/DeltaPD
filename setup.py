@@ -20,9 +20,8 @@
 import os
 import platform
 import re
-from distutils.command.build import build as build_orig
-
 from setuptools import setup, find_packages, Extension
+from distutils.command.build import build as build_orig
 
 
 # Read the package information.

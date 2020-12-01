@@ -25,6 +25,7 @@ from distutils.command.build import build as build_orig
 from setuptools import setup, find_packages, Extension
 
 
+# Read the package information.
 def read_meta():
     path = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'deltapd/__init__.py')
     with open(path) as fh:
@@ -32,13 +33,23 @@ def read_meta():
     return {k: v for k, v in hits}
 
 
+# Package the README
 def readme():
     with open('README.md') as f:
         return f.read()
 
 
-class build(build_orig):
+try:
+    # Cython will be present when running setup (sdist, bdist_wheel)
+    import Cython
+    EXT = '.pyx'
+except ImportError:
+    # User is installing from pre-generated files
+    EXT = '.cpp'
 
+
+# Override the build options for setup (sdist, bdist_wheel)
+class build(build_orig):
     def finalize_options(self):
         super().finalize_options()
         __builtins__.__NUMPY_SETUP__ = False
@@ -50,11 +61,11 @@ class build(build_orig):
                                                   language_level=3)
 
 
-# Environment specific compiler setttings.
+# Environment-specific compiler settings.
 compile_extra_args = ['-O3', '-ffast-math', '-march=native']
 link_extra_args = list()
 if platform.system() == "Windows":
-    pass
+    pass  # TODO: Test this case.
 elif platform.system() == "Darwin":
     compile_extra_args.extend(['-std=c++11', "-mmacosx-version-min=10.9", '-Xpreprocessor', '-fopenmp'], )
     link_extra_args.extend(["-stdlib=libc++", "-mmacosx-version-min=10.9", '-Xpreprocessor', '-fopenmp'])
@@ -62,28 +73,25 @@ else:
     compile_extra_args.extend(['-fopenmp'])
     link_extra_args.extend(['-fopenmp'])
 
-# Select Cython modules to compile.
-ext_modules = [Extension('deltapd.model', ['deltapd/model.pyx'],
-                         language='c++',
-                         extra_compile_args=compile_extra_args,
-                         extra_link_args=link_extra_args
-                         ),
-               Extension('deltapd.model_test', ['deltapd/model_test.pyx'],
-                         language='c++',
-                         extra_compile_args=compile_extra_args,
-                         extra_link_args=link_extra_args
-                         ),
-               Extension('deltapd.util', ['deltapd/util.pyx'],
-                         language='c++',
-                         extra_compile_args=compile_extra_args,
-                         extra_link_args=link_extra_args
-                         ),
-               Extension('deltapd.util_test', ['deltapd/util_test.pyx'],
-                         language='c++',
-                         extra_compile_args=compile_extra_args,
-                         extra_link_args=link_extra_args
-                         )
-               ]
+# Include the Cython modules (either to translate, or pre-translated)
+ext_modules = [
+    Extension('deltapd.model', [f'deltapd/model{EXT}'],
+              language='c++',
+              extra_compile_args=compile_extra_args,
+              extra_link_args=link_extra_args),
+    Extension('deltapd.model_test', [f'deltapd/model_test{EXT}'],
+              language='c++',
+              extra_compile_args=compile_extra_args,
+              extra_link_args=link_extra_args),
+    Extension('deltapd.util', [f'deltapd/util{EXT}'],
+              language='c++',
+              extra_compile_args=compile_extra_args,
+              extra_link_args=link_extra_args),
+    Extension('deltapd.util_test', [f'deltapd/util_test{EXT}'],
+              language='c++',
+              extra_compile_args=compile_extra_args,
+              extra_link_args=link_extra_args)
+]
 
 meta = read_meta()
 setup(name=meta['title'],
@@ -119,6 +127,7 @@ setup(name=meta['title'],
       },
       install_requires=['numpy', 'phylodm', 'tqdm', 'ete3', 'dendropy', 'matplotlib', 'jinja2'],
       python_requires='>=3.6',
+      setup_requires=['numpy', 'cython'],
       data_files=[("", ["LICENSE"])],
       ext_modules=ext_modules,
       cmdclass={'build': build}

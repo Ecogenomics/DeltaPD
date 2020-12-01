@@ -129,38 +129,6 @@ class TestUtil(unittest.TestCase):
             self.assertTrue(np.all(mv_ra == true_ra))
             self.assertTrue(np.all(mv_rb == true_rb))
 
-    def test_foo(self):
-
-        minimum, maximum = 0, 1000
-        from collections import Counter
-        v = np.random.randint(minimum, maximum, 1000)
-        cnt = Counter(v)
-        n_zero = 0
-        vals = list()
-        d_vals = dict()
-        for i in range(minimum, maximum):
-            if cnt[i] == 0:
-                n_zero += 1
-            d_vals[i] = cnt[i]
-
-        x, y = list(), list()
-        for k, v in sorted(d_vals.items(), key=lambda f: -f[1]):
-            x.append(k)
-            y.append(v)
-        print(f'No hits: {n_zero}')
-        print(f'Minimum: {sorted(y)[0:10]}')
-        print(f'Maximum: {sorted(y)[-10:]}')
-
-        import seaborn as sns
-        import matplotlib.pyplot as plt
-        sns.barplot(x, y)
-        plt.show()
-
-        sns.distplot(y)
-        plt.show()
-
-        return
-
 
 def get_test_matrix(n):
     mat = np.zeros((n, n), dtype=np.float64)

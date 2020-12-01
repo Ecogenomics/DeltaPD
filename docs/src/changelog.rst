@@ -2,10 +2,17 @@
 Change log
 ==========
 
+0.1.2
+-----
+
+* Added missing packages for packaging.
+
+
 0.1.1
 -----
 
 * Fixed packaging issues where pip install wouldn't work.
+
 
 0.1.0
 -----

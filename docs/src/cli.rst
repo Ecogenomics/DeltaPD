@@ -2,6 +2,6 @@ Arguments
 =========
 
 .. argparse::
-   :module: deltapd.__main__
+   :module: deltapd.cli
    :func: main_parser
    :prog: deltapd

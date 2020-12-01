@@ -22,6 +22,7 @@ import platform
 import re
 from setuptools import setup, find_packages, Extension
 from distutils.command.build import build as build_orig
+from glob import glob
 
 
 # Read the package information.
@@ -124,10 +125,13 @@ setup(name=meta['title'],
               'deltapd = deltapd.__main__:main'
           ]
       },
-      install_requires=['numpy', 'phylodm', 'tqdm', 'ete3', 'dendropy', 'matplotlib', 'jinja2'],
+      install_requires=['numpy', 'phylodm', 'tqdm', 'ete3', 'dendropy', 'matplotlib', 'jinja2', 'seaborn'],
       python_requires='>=3.6',
       setup_requires=['numpy', 'cython'],
-      data_files=[("", ["LICENSE"])],
+      data_files=[
+          ("", ["LICENSE"]),
+          ('deltapd/templates', glob('deltapd/templates/**/*', recursive=True))
+      ],
       ext_modules=ext_modules,
       cmdclass={'build': build}
       )

@@ -1,7 +1,7 @@
 Change log
 ==========
 
-0.1.1 - 0.1.4
+0.1.1 - 0.1.5
 -------------
 
 * Fixed various issues associated with PyPI and Conda packaging.

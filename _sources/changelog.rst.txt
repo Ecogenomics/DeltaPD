@@ -1,17 +1,10 @@
-
 Change log
 ==========
 
-0.1.2
------
+0.1.1 - 0.1.3
+-------------
 
-* Added missing packages for packaging.
-
-
-0.1.1
------
-
-* Fixed packaging issues where pip install wouldn't work.
+* Fixed various issues associated with PyPI and Conda packaging.
 
 
 0.1.0

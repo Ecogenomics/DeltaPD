@@ -119,7 +119,6 @@ setup(name=meta['title'],
       ],
       keywords=meta['keywords'],
       packages=find_packages(),
-      include_package_data=True,
       entry_points={
           'console_scripts': [
               'deltapd = deltapd.__main__:main'
@@ -128,9 +127,15 @@ setup(name=meta['title'],
       install_requires=['numpy', 'phylodm', 'tqdm', 'ete3', 'dendropy', 'matplotlib', 'jinja2', 'seaborn'],
       python_requires='>=3.6',
       setup_requires=['numpy', 'cython'],
+      include_package_data=True,
       data_files=[
           ("", ["LICENSE"]),
-          ('deltapd/templates', glob('deltapd/templates/**/*', recursive=True))
+          ('deltapd/templates', glob('deltapd/templates/*.html')),
+          ('deltapd/templates/assets/css', glob('deltapd/templates/assets/css/*.css')),
+          ('deltapd/templates/assets/js', glob('deltapd/templates/assets/js/*.js')),
+          ('deltapd/templates/static/img', glob('deltapd/templates/static/img/*.svg')),
+          ('deltapd/templates/static/font/Roboto', ['deltapd/templates/static/font/Roboto/LICENSE.txt',
+                                                    'deltapd/templates/static/font/Roboto/Roboto-Regular.ttf'])
       ],
       ext_modules=ext_modules,
       cmdclass={'build': build}

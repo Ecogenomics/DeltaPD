@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Installation &mdash; deltapd 0.1.0 documentation</title>
+  <title>Installation &mdash; deltapd 0.1.2 documentation</title>
   
 
   
@@ -88,7 +88,7 @@
             
             
               <div class="version">
-                0.1.0
+                0.1.2
               </div>
             
           
@@ -116,7 +116,11 @@
               <p class="caption"><span class="caption-text">Getting started</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="announcements.html">Announcements</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Installation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#pypi">PyPI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#docker">Docker</a></li>
+</ul>
+</li>
 </ul>
 <p class="caption"><span class="caption-text">Running DeltaPD</span></p>
 <ul>
@@ -225,9 +229,22 @@
 </style>
 <div class="section" id="installation">
 <span id="installing"></span><h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="pypi">
+<h2>PyPI<a class="headerlink" href="#pypi" title="Permalink to this headline">¶</a></h2>
 <p>All third-party dependencies are installed automatically via pip, simply run:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python -m pip install deltapd
 </pre></div>
+</div>
+</div>
+<div class="section" id="docker">
+<h2>Docker<a class="headerlink" href="#docker" title="Permalink to this headline">¶</a></h2>
+<p>The container must be able to access the input data, and write output data.
+Therefore, you must specify a volume mapping (<code class="docutils literal notranslate"><span class="pre">-v</span> <span class="pre">host:container</span></code>), e.g.
+the host path <code class="docutils literal notranslate"><span class="pre">/tmp/deltapd</span></code> is mapped to the container path <code class="docutils literal notranslate"><span class="pre">/data</span></code></p>
+<p>Note: <code class="docutils literal notranslate"><span class="pre">--plot</span></code> will not work as it requires a display for PyQt.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker run -v /tmp/deltapd:/data deltapd:latest --r_tree /data/ar122_reference.tree --q_tree /data/ar122_ssu_query.tree --metadata /data/ar122_metadata_r95.tsv --msa_file /data/ar122_ssu_r95.fna --influence_thresh <span class="m">2</span> --diff_thresh <span class="m">0</span>.10 --out_dir /data/deltapd_out --k <span class="m">20</span> --cpus <span class="m">10</span>
+</pre></div>
+</div>
 </div>
 </div>
 

@@ -20,45 +20,32 @@
 import os
 import platform
 import re
-from setuptools import setup, find_packages, Extension
-from distutils.command.build import build as build_orig
 from glob import glob
 
-
-# Read the package information.
-def read_meta():
-    path = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'deltapd/__init__.py')
-    with open(path) as fh:
-        hits = re.findall(r'__(\w+)__ ?= ?["\'](.+)["\']\n', fh.read())
-    return {k: v for k, v in hits}
-
-
-# Package the README
-def readme():
-    with open('README.md') as f:
-        return f.read()
-
+from setuptools import setup, find_packages, Extension, command
 
 try:
-    # Cython will be present when running setup (sdist, bdist_wheel)
-    import Cython
+    from Cython.Build import cythonize
+
+    CYTHON = True
     EXT = '.pyx'
+    LANG = 'c++'
 except ImportError:
-    # User is installing from pre-generated files
+    CYTHON = False
     EXT = '.cpp'
+    LANG = ''
 
 
-# Override the build options for setup (sdist, bdist_wheel)
-class build(build_orig):
-    def finalize_options(self):
-        super().finalize_options()
-        __builtins__.__NUMPY_SETUP__ = False
-        import numpy
-        for extension in self.distribution.ext_modules:
-            extension.include_dirs.append(numpy.get_include())
-        from Cython.Build import cythonize
-        self.distribution.ext_modules = cythonize(self.distribution.ext_modules,
-                                                  language_level=3)
+class BuildExtension(command.build_ext.build_ext):
+    def build_extensions(self):
+        import numpy as np
+        np_include = np.get_include()
+
+        for ext in self.extensions:
+            if hasattr(ext, "include_dirs") and np_include in ext.include_dirs:
+                ext.include_dirs.append(np_include)
+
+        command.build_ext.build_ext.build_extensions(self)
 
 
 # Environment-specific compiler settings.
@@ -75,23 +62,45 @@ else:
 
 # Include the Cython modules (either to translate, or pre-translated)
 ext_modules = [
-    Extension('deltapd.model', [f'deltapd/model{EXT}'],
-              language='c++',
+    Extension(name='deltapd.model',
+              sources=[f'deltapd/model{EXT}'],
+              language=LANG,
               extra_compile_args=compile_extra_args,
               extra_link_args=link_extra_args),
-    Extension('deltapd.model_test', [f'deltapd/model_test{EXT}'],
-              language='c++',
+    Extension(name='deltapd.model_test',
+              sources=[f'deltapd/model_test{EXT}'],
+              language=LANG,
               extra_compile_args=compile_extra_args,
               extra_link_args=link_extra_args),
-    Extension('deltapd.util', [f'deltapd/util{EXT}'],
-              language='c++',
+    Extension(name='deltapd.util',
+              sources=[f'deltapd/util{EXT}'],
+              language=LANG,
               extra_compile_args=compile_extra_args,
               extra_link_args=link_extra_args),
-    Extension('deltapd.util_test', [f'deltapd/util_test{EXT}'],
-              language='c++',
+    Extension(name='deltapd.util_test',
+              sources=[f'deltapd/util_test{EXT}'],
+              language=LANG,
               extra_compile_args=compile_extra_args,
               extra_link_args=link_extra_args)
 ]
+
+if CYTHON:
+    ext_modules = cythonize(ext_modules, language_level=3)
+
+
+# Read the package information.
+def read_meta():
+    path = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'deltapd/__init__.py')
+    with open(path) as fh:
+        hits = re.findall(r'__(\w+)__ ?= ?["\'](.+)["\']\n', fh.read())
+    return {k: v for k, v in hits}
+
+
+# Package the README
+def readme():
+    with open('README.md') as f:
+        return f.read()
+
 
 meta = read_meta()
 setup(name=meta['title'],
@@ -138,5 +147,5 @@ setup(name=meta['title'],
                                                     'deltapd/templates/static/font/Roboto/Roboto-Regular.ttf'])
       ],
       ext_modules=ext_modules,
-      cmdclass={'build': build}
+      cmdclass={"build_ext": BuildExtension}
       )

@@ -22,30 +22,27 @@ import platform
 import re
 from glob import glob
 
-from setuptools import setup, find_packages, Extension, command
+from setuptools import setup, find_packages, Extension
+from setuptools.command.build_ext import build_ext as _build_ext
 
 try:
     from Cython.Build import cythonize
 
     CYTHON = True
-    EXT = '.pyx'
+    EXT = 'pyx'
     LANG = 'c++'
 except ImportError:
     CYTHON = False
-    EXT = '.cpp'
+    EXT = 'cpp'
     LANG = ''
 
 
-class BuildExtension(command.build_ext.build_ext):
-    def build_extensions(self):
-        import numpy as np
-        np_include = np.get_include()
-
-        for ext in self.extensions:
-            if hasattr(ext, "include_dirs") and np_include in ext.include_dirs:
-                ext.include_dirs.append(np_include)
-
-        command.build_ext.build_ext.build_extensions(self)
+class build_ext(_build_ext):
+    def finalize_options(self):
+        _build_ext.finalize_options(self)
+        __builtins__.__NUMPY_SETUP__ = False
+        import numpy
+        self.include_dirs.append(numpy.get_include())
 
 
 # Environment-specific compiler settings.
@@ -63,29 +60,29 @@ else:
 # Include the Cython modules (either to translate, or pre-translated)
 ext_modules = [
     Extension(name='deltapd.model',
-              sources=[f'deltapd/model{EXT}'],
+              sources=[f'deltapd/model.{EXT}'],
               language=LANG,
               extra_compile_args=compile_extra_args,
               extra_link_args=link_extra_args),
     Extension(name='deltapd.model_test',
-              sources=[f'deltapd/model_test{EXT}'],
+              sources=[f'deltapd/model_test.{EXT}'],
               language=LANG,
               extra_compile_args=compile_extra_args,
               extra_link_args=link_extra_args),
     Extension(name='deltapd.util',
-              sources=[f'deltapd/util{EXT}'],
+              sources=[f'deltapd/util.{EXT}'],
               language=LANG,
               extra_compile_args=compile_extra_args,
               extra_link_args=link_extra_args),
     Extension(name='deltapd.util_test',
-              sources=[f'deltapd/util_test{EXT}'],
+              sources=[f'deltapd/util_test.{EXT}'],
               language=LANG,
               extra_compile_args=compile_extra_args,
               extra_link_args=link_extra_args)
 ]
 
 if CYTHON:
-    ext_modules = cythonize(ext_modules, language_level=3)
+    ext_modules = cythonize(ext_modules, compiler_directives={'language_level': '3'})
 
 
 # Read the package information.
@@ -137,6 +134,9 @@ setup(name=meta['title'],
       python_requires='>=3.6',
       setup_requires=['numpy', 'cython'],
       include_package_data=True,
+      package_data={
+          'deltapd': ['*.pyx', '*.pxd']
+      },
       data_files=[
           ("", ["LICENSE"]),
           ('deltapd/templates', glob('deltapd/templates/*.html')),
@@ -147,5 +147,5 @@ setup(name=meta['title'],
                                                     'deltapd/templates/static/font/Roboto/Roboto-Regular.ttf'])
       ],
       ext_modules=ext_modules,
-      cmdclass={"build_ext": BuildExtension}
+      cmdclass={"build_ext": build_ext}
       )
